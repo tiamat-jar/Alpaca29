@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Ejercicio de Drag & Drop</title>
+  <link rel="stylesheet" href="drag&drop.css">
+</head>
+<body>
+  <h1>Drag & Drop API</h1>
+  <div id="main">
+    <div class="source">
+      <div class="circle" draggable="true"></div>
+      <div class="circle" draggable="true"></div>
+      <div class="circle" draggable="true"></div>
+      <div class="circle" draggable="true"></div>
+    </div>
+    <div class="container">
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var container;
+    var movingElement;
+    window.addEventListener('load',init);
+    function init(){
+      container = document.querySelector('container');
+      container.addEventListener('dragover',dragOverContainer, false);
+      container.addEventListener('dragleave',dragLeaveContainer, false);
+      container.addEventListener('drop', droped, false);
+      var circles = document.getElementsByClassName('circle');
+      for (i in circles){
+        var circle = circles[i];
+        var x = random(0,90);
+        var y = random(0,90);
+        if(typeof circle.style != "undefined"){
+          circle.style.top = y + '%';
+          circle.style.left = x + '%';
+          circle.addEventListener('dragstart', dragStarted, false);
+          circle.addEventListener('dragend', dragEnded, false);
+        }
+      }
+    }
+    function dragStarted(e){
+      this.style.backgroundColor = 'blue';
+      movingElement = this;
+      var father = document.createElement('p');
+      var clon = this.cloneNode(true);
+      father.appenChild(clon);
+      e.dataTransfer.setData('text',father.innerHTML);
+    }
+    function droped(e){
+      e.preventDefault();
+      var data = e.dataTransfer.getData('text');
+      this.innerHTML += data;
+      movingElement.parentNode.removeChild(movmovingElement);
+      this.classList.remove('over');
+    }
+    function dragOverContainer(e){
+      e.preventDefault();
+      this.classList.add('over');
+      return false;
+    }
+    function dragLeaveContainer(e){
+      this.classList.remove('over');
+    }
+    function dragEnded(e){
+      this.style.backgroundColor = 'red';
+    }
+    function random(min,max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+  </script>
+</body>
+</html>
